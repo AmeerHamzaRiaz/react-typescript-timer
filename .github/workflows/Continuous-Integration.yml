@@ -1,16 +1,56 @@
-name: Continuous Integration
-on: [pull_request]
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  buildAndTest:
-    name: Build and Test
-    runs-on: ubuntu-latest    
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v1
-      - name: Install Dependencies
-        run: yarn
-      - name: Build
-        env:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Runs a single command using the runners shell
+    - name: Install NodeJS
+      uses: actions/setup-node@v2-beta
+      with: 
+        node-version: 12
+      
+    - name: Install Surge
+      run: npm install -g surge
+
+    #npm installing yarn for create react app
+    - name: Installing yarn 
+      uses: borales/actions-yarn@v2.0.0
+      with:
+         cmd: install # will run `yarn install` command
+    
+    # Now building yarn
+    - name: Building yarn
+      uses: borales/actions-yarn@v2.0.0
+      env:
           CI: false # CRA treats warnings as errors in CI - re-enable if needed
-        run: yarn build
-      - name: Test
-        run: yarn test --watchAll=false
+      with:
+          cmd: build # will run `yarn build` command
+    
+    # Now Run Test Cases
+    - name: Testing Project
+      uses: borales/actions-yarn@v2.0.0
+      with:
+          cmd: test # will run `yarn test` command
+          
+    # Now we need after installing surge we need to run that
+    - name: Running a surge
+      run: surge ./build http://squalid-fog.surge.sh/ --token ${{secrets.SURGE_TOKEN}}   
