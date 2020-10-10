@@ -4,10 +4,7 @@ import Timer from './components/Timer';
 
 function App() {
   return (
-    <div>
-      <h1>Timer App</h1>
       <Timer />
-    </div>
   );
 }
 

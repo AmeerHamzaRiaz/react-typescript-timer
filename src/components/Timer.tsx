@@ -42,6 +42,7 @@ const Timer = () => {
             <div className="button-wrapper">
 
                 <button
+                    data-testid="stop"
                     role="button"
                     onClick={toggleTimer}
                     disabled={!isTimerRunning}>
@@ -49,6 +50,7 @@ const Timer = () => {
                 </button>
 
                 <button
+                    data-testid="start"
                     role="button"
                     onClick={toggleTimer}
                     disabled={isTimerRunning}>
@@ -56,6 +58,7 @@ const Timer = () => {
                 </button>
 
                 <button
+                    data-testid="reset"
                     role="button"
                     onClick={resetTimer}
                     disabled={isTimerRunning}>
